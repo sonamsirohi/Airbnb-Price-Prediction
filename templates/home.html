@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Airbnb Price Prediction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <h1>🏡 Airbnb Price Predictor</h1>
+        <form method="POST" action="{{ url_for('predict') }}">
+            <div class="form-group">
+                <label for="bedrooms">Bedrooms</label>
+                <input type="number" name="bedrooms" required value="{{ form_data.get('bedrooms', '') }}">
+            </div>
+
+            <div class="form-group">
+                <label for="bathrooms">Bathrooms</label>
+                <input type="number" name="bathrooms" required value="{{ form_data.get('bathrooms', '') }}">
+            </div>
+
+            <div class="form-group">
+                <label for="guests">Guests</label>
+                <input type="number" name="guests" required value="{{ form_data.get('guests', '') }}">
+            </div>
+
+            <div class="form-group">
+                <label for="beds">Beds</label>
+                <input type="number" name="beds" required value="{{ form_data.get('beds', '') }}">
+            </div>
+
+            <div class="form-group">
+                <label for="country">Country</label>
+                <select name="country" required>
+                    <option value="" disabled {% if not form_data.get('country') %}selected{% endif %}>Select Country
+                    </option>
+                    {% for country in [
+                    "India", "United States", "Canada", "United Kingdom", "Australia",
+                    "France", "Germany", "Spain", "Italy", "Japan", "Brazil", "Mexico",
+                    "Thailand", "Turkey", "Vietnam", "South Korea", "Philippines", "Taiwan",
+                    "Lebanon", "Israel", "Armenia", "Cyprus", "Lithuania", "Slovakia",
+                    "Denmark", "Indonesia", "Poland", "Romania", "Greece", "Ukraine",
+                    "Hungary", "Albania", "Bulgaria", "Malaysia", "Montenegro", "Czechia",
+                    "Sweden", "Austria", "Croatia", "Tanzania", "Sri Lanka",
+                    "Bosnia & Herzegovina", "Morocco", "Egypt", "Chile", "Peru", "Fiji",
+                    "Maldives", "Finland", "Norway", "Congo", "Malta", "Saudi Arabia",
+                    "Portugal", "Costa Rica", "Latvia", "Qatar", "Jamaica", "Jordan"
+                    ] %}
+                    <option value="{{ country }}" {% if form_data.get('country')==country %}selected{% endif %}>{{
+                        country }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="rating">Rating</label>
+                <input type="number" step="0.1" name="rating" required value="{{ form_data.get('rating', '') }}">
+            </div>
+
+            <div class="form-group">
+                <label for="reviews">Reviews</label>
+                <input type="number" name="reviews" required value="{{ form_data.get('reviews', '') }}">
+            </div>
+
+            <div class="form-group">
+                <label for="checkin">Check-in</label>
+                <input type="text" name="checkin" placeholder="e.g., 2:00 PM" required
+                    value="{{ form_data.get('checkin', '') }}">
+            </div>
+
+            <div class="form-group">
+                <label for="checkout">Check-out</label>
+                <input type="text" name="checkout" placeholder="e.g., 11:00 AM" required
+                    value="{{ form_data.get('checkout', '') }}">
+            </div>
+
+            <button type="submit">🔮 Predict Price per Bed</button>
+        </form>
+
+        {% if prediction is not none %}
+        <div class="result">
+            💰 <strong>Estimated Price per Bed:</strong> ₹ {{ prediction }}
+        </div>
+        {% endif %}
+    </div>
+</body>
+
+</html>
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Airbnb Price Prediction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <h1>🏡 Airbnb Price Predictor</h1>
+        <form method="POST">
+            <div class="form-group"> <label for="bedrooms">Bedrooms</label> <input type="number" name="bedrooms"
+                    required> </div>
+            <div class="form-group"> <label for="bathrooms">Bathrooms</label> <input type="number" name="bathrooms"
+                    required> </div>
+            <div class="form-group"> <label for="guests">Guests</label> <input type="number" name="guests" required>
+            </div>
+            <div class="form-group"> <label for="beds">Beds</label> <input type="number" name="beds" required> </div>
+            <div class="form-group"> <label for="country">Country</label> <select name="country" required>
+                    <option value="" disabled selected>Select Country</option>
+                    <option value="India">India</option>
+                    <option value="United States">United States</option>
+                    <option value="Canada">Canada</option>
+                    <option value="United Kingdom">United Kingdom</option>
+                    <option value="Australia">Australia</option>
+                    <option value="France">France</option>
+                    <option value="Germany">Germany</option>
+                    <option value="Spain">Spain</option>
+                    <option value="Italy">Italy</option>
+                    <option value="Japan">Japan</option>
+                    <option value="Brazil">Brazil</option>
+                    <option value="Mexico">Mexico</option>
+                    <option value="China">China</option>
+                    <option value="Thailand">Thailand</option>
+                    <option value="Turkey">Turkey</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="Vietnam">Vietnam</option>
+                    <option value="South Korea">South Korea</option>
+                    <option value="Philipines">Phillipines</option>
+                    <option value="Taiwan">Taiwan</option>
+                    <option value="Lebanon">Lebanon</option>
+                    <option value="Israel">Israel</option>
+                    <option value="Armenia">Armenia</option>
+                    <option value="Cyprus">Cyprus</option>
+                    <option value="Lithunia">Lithunia</option>
+                    <option value="Slovakia">Slovakia</option>
+                    <option value="Denmark">Denmark</option>
+                    <option value="Indonesia">Indonesia</option>
+                    <option value="Poland">Poland</option>
+                    <option value="Romania">Romania</option>
+                    <option value="Greece">Greece</option>
+                    <option value="Ukraine">Ukraine</option>
+                    <option value="Hungry">Hungry</option>
+                    <option value="Albenia">Albenia</option>
+                    <option value="Bulgeria">Bulgeria</option>
+                    <option value="Malaysia">Malaysia</option>
+                    <option value="Montenegro">Montenegro</option>
+                    <option value="Czechia">Czechia</option>
+                    <option value="Swedan">Swedan</option>
+                    <option value="Austria">Austria</option>
+                    <option value="Croatia">Croatia</option>
+                    <option value="Tanzania">Tanzania</option>
+                    <option value="Italy">Italy</option>
+                    <option value="Sri lanka">Sri Lanka</option>
+                    <option value="Bosnia & Herzegovina">Bosnia & Herzegovina</option>
+                    <option value="Morocco">Morocco</option>
+                    <option value="Egypt">Egypt</option>
+                    <option value="Chile">Chile</option>
+                    <option value="Peru">Peru</option>
+                    <option value="Fiji">Fiji</option>
+                    <option value="Maldives">Maldives</option>
+                    <option value="Finland">Finland</option>
+                    <option value="Norway">Norway</option>
+                    <option value="Congo">Congo</option>
+                    <option value="Malta">Malta</option>
+                    <option value="Saudi Arabia">Saudi Arabia</option>
+                    <option value="Portugal">Portugal</option>
+                    <option value="Costa Rica">Costa Rica</option>
+                    <option value="Latvia">Latvia</option>
+                    <option value="Qatar">Qatar</option>
+                    <option value="Jamiaca">Jamaica</option>
+                    <option value="Jordan">Jordan</option>
+                </select> </div>
+            <div class="form-group"> <label for="rating">Rating</label> <input type="number" step="0.1" name="rating"
+                    required> </div>
+            <div class="form-group"> <label for="reviews">Reviews</label> <input type="number" name="reviews" required>
+            </div>
+            <div class="form-group"> <label for="checkin">Check-in</label> <input type="text" name="checkin"
+                    placeholder="e.g., 2:00 PM" required> </div>
+            <div class="form-group"> <label for="checkout">Check-out</label> <input type="text" name="checkout"
+                    placeholder="e.g., 11:00 AM" required> </div> <button type="submit">🔮 Predict Price per
+                Bed</button>
+        </form> {% if prediction is not none %} <div class="result"> 💰 Estimated Price per Bed: ₹ <strong>{{ prediction
+                }}</strong> </div> {% endif %}
+    </div>
+</body>
+
+</html> -->
